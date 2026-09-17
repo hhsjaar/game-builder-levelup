@@ -1,0 +1,134 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import Sidebar from "@/components/Sidebar";
+import ChatPanel from "@/components/ChatPanel";
+import { getOrCreateClientId } from "@/lib/client-id";
+import type { ConversationRecord, MessageRecord } from "@/lib/types";
+
+interface GameInfo {
+  id: string;
+  html_content: string;
+}
+
+export default function HomePage() {
+  const [clientId] = useState(() => getOrCreateClientId());
+  const [conversations, setConversations] = useState<ConversationRecord[]>([]);
+  const [loadingSidebar, setLoadingSidebar] = useState(true);
+  const [activeConversation, setActiveConversation] = useState<ConversationRecord | null>(null);
+  const [messages, setMessages] = useState<MessageRecord[]>([]);
+  const [game, setGame] = useState<GameInfo | null>(null);
+  const [loadingThread, setLoadingThread] = useState(false);
+  const [globalError, setGlobalError] = useState<string | null>(null);
+
+  const refreshSidebar = useCallback(async (id: string) => {
+    setLoadingSidebar(true);
+    try {
+      const res = await fetch(`/api/conversations?clientId=${encodeURIComponent(id)}`);
+      const data = await res.json();
+      setConversations(data.conversations ?? []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingSidebar(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!clientId) return;
+    // Initial data fetch on mount — a legitimate effect use case (see
+    // react.dev/learn/you-might-not-need-an-effect#fetching-data).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    refreshSidebar(clientId);
+  }, [clientId, refreshSidebar]);
+
+  const handleNewChat = useCallback(async () => {
+    if (!clientId) return;
+    setLoadingThread(true);
+    setGlobalError(null);
+    try {
+      const res = await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setActiveConversation(data.conversation);
+      setMessages(data.messages);
+      setGame(null);
+      setConversations((prev) => [data.conversation, ...prev]);
+    } catch (err) {
+      console.error(err);
+      setGlobalError(err instanceof Error ? err.message : "Gagal membuat chat baru.");
+    } finally {
+      setLoadingThread(false);
+    }
+  }, [clientId]);
+
+  const handleSelectConversation = useCallback(
+    async (id: string) => {
+      if (!clientId) return;
+      setLoadingThread(true);
+      setGlobalError(null);
+      try {
+        const res = await fetch(`/api/conversations/${id}?clientId=${encodeURIComponent(clientId)}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        setActiveConversation(data.conversation);
+        setMessages(data.messages);
+        setGame(data.game ?? null);
+      } catch (err) {
+        console.error(err);
+        setGlobalError(err instanceof Error ? err.message : "Gagal membuka percakapan.");
+      } finally {
+        setLoadingThread(false);
+      }
+    },
+    [clientId]
+  );
+
+  const handleConversationChange = useCallback((next: ConversationRecord) => {
+    setActiveConversation(next);
+    setConversations((prev) => {
+      const idx = prev.findIndex((c) => c.id === next.id);
+      if (idx === -1) return [next, ...prev];
+      const copy = [...prev];
+      copy[idx] = next;
+      return copy;
+    });
+  }, []);
+
+  return (
+    <div className="flex h-screen w-full flex-col overflow-hidden">
+      {globalError && (
+        <div className="flex items-center justify-between gap-3 border-b-2 border-danger bg-danger/10 px-4 py-2 text-sm font-bold text-danger">
+          <span>{globalError}</span>
+          <button onClick={() => setGlobalError(null)} className="shrink-0 underline">
+            Tutup
+          </button>
+        </div>
+      )}
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar
+          conversations={conversations}
+          activeId={activeConversation?.id ?? null}
+          onSelect={handleSelectConversation}
+          onNewChat={handleNewChat}
+          loading={loadingSidebar}
+        />
+        <ChatPanel
+          clientId={clientId}
+          conversation={activeConversation}
+          messages={messages}
+          game={game}
+          onMessagesChange={setMessages}
+          onConversationChange={handleConversationChange}
+          onGameReady={setGame}
+          onNewGame={handleNewChat}
+          loadingThread={loadingThread}
+        />
+      </div>
+    </div>
+  );
+}

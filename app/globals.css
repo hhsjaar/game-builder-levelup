@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff6ec;
+  --foreground: #2d2a4a;
+  --card-bg: #ffffff;
+  --card-border: #ffe1ec;
+  --card-shadow: 0 10px 30px rgba(108, 92, 231, 0.08);
+  --primary: #ff6fa8;
+  --primary-foreground: #ffffff;
+  --secondary: #4ecdc4;
+  --accent: #ffd93d;
+  --purple: #6c5ce7;
+  --success: #35c777;
+  --danger: #ff6b6b;
+  --muted: #8b86a8;
+  --border: #ffe1ec;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-purple: var(--purple);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --font-display: var(--font-baloo), "Baloo 2", sans-serif;
+  --font-sans: var(--font-nunito), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(255, 217, 61, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 92% 15%, rgba(78, 205, 196, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 15% 90%, rgba(255, 111, 168, 0.15) 0%, transparent 45%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+@keyframes bounce-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 111, 168, 0.35); }
+  50% { box-shadow: 0 0 0 10px rgba(255, 111, 168, 0); }
+}
+
+.animate-bounce-soft {
+  animation: bounce-soft 2.4s ease-in-out infinite;
+}
+
+.animate-float-soft {
+  animation: float-soft 4s ease-in-out infinite;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.2s infinite;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 9999px;
+}
