@@ -7,7 +7,10 @@ import { errorMessage } from "@/lib/error-message";
 import type { ConversationRecord } from "@/lib/types";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+// Game generation (Claude call with a large single-file HTML output) routinely
+// takes well over 60s. Vercel Hobby allows up to 300s with Fluid Compute
+// (the current default) — 180s leaves headroom under that ceiling.
+export const maxDuration = 180;
 
 export async function POST(
   req: NextRequest,
