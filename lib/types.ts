@@ -59,6 +59,9 @@ export type SelectMode = "single" | "multi";
 export interface StepOption {
   value: string;
   label: string;
+  /** Decorative emoji shown next to the label in the UI — kept separate from
+   * `label` so prompt text sent to Claude stays plain. */
+  emoji?: string;
 }
 
 export interface StepDefinition {

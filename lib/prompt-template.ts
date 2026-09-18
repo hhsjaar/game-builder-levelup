@@ -8,7 +8,9 @@ import {
   GAME_TYPES,
   GAME_TYPE_MECHANICS,
   INTERACTIVE_CONCEPTS,
+  INTERACTIVE_CONCEPT_MECHANICS,
   THEMES,
+  TWO_PLAYER_FEATURE_VALUE,
   labelFor,
   labelsFor,
 } from "./game-taxonomy";
@@ -16,8 +18,15 @@ import type { GameSpec } from "./types";
 
 function buildMechanicsBlock(spec: GameSpec): string {
   if (spec.mode === "interactive") {
-    const conceptLabel = labelFor(INTERACTIVE_CONCEPTS, spec.interactiveConcept ?? "");
-    return `Konsep game: "${conceptLabel}". Rancang mekanisme gameplay (interaksi, animasi, alur) yang benar-benar sesuai dan khas untuk konsep ini — bukan sekadar kuis pilihan ganda generik yang diberi tema baru. Tetap patuhi seluruh aturan visual, halaman welcoming, branding, sistem skor, dan penyesuaian usia di bagian lain instruksi ini.`;
+    const conceptValue = spec.interactiveConcept ?? "";
+    const conceptLabel = labelFor(INTERACTIVE_CONCEPTS, conceptValue);
+    const mechanic = INTERACTIVE_CONCEPT_MECHANICS[conceptValue];
+
+    if (mechanic) {
+      return `Konsep game: "${conceptLabel}".\n${mechanic}\nBangun soal/konten dan gaya bertanya yang menyatu dengan fantasi konsep ini (bukan kalimat soal kuis generik yang ditempel begitu saja di atas tema) — narasi, instruksi tombol, dan feedback semua memakai istilah dunia "${conceptLabel}".`;
+    }
+
+    return `Konsep game: "${conceptLabel}" (konsep kustom buatan user). Rancang sendiri mekanisme gameplay (interaksi, animasi, alur, gaya bertanya) yang benar-benar sesuai dan khas untuk konsep bernama "${conceptLabel}" ini — bukan sekadar kuis pilihan ganda generik yang diberi tema baru. Tetap patuhi seluruh aturan visual, halaman welcoming, branding, sistem skor, dan penyesuaian usia di bagian lain instruksi ini.`;
   }
 
   const knownTypeLines: string[] = [];
@@ -73,6 +82,16 @@ function buildAgeToneBlock(spec: GameSpec): string {
   return parts.join("\n");
 }
 
+function buildTwoPlayerBlock(spec: GameSpec): string {
+  if (!spec.features.includes(TWO_PLAYER_FEATURE_VALUE)) return "";
+
+  return `\n\n👨‍👩‍👧 MODE 2 PEMAIN (WAJIB):
+- Rancang game ini agar bisa dimainkan bergantian oleh 2 pemain di perangkat yang sama (misal anak dan orang tua/kakak main bersama), bukan hanya untuk 1 pemain.
+- Tampilkan giliran yang jelas di layar (misal "Giliran Pemain 1" / "Giliran Pemain 2") dengan warna/avatar berbeda per pemain agar mudah dibedakan.
+- Simpan skor terpisah untuk masing-masing pemain, dan tampilkan perbandingan skor kedua pemain di halaman skor akhir dengan cara yang tetap ramah dan tidak membuat pemain yang kalah merasa buruk (nada tetap suportif, rayakan usaha kedua pemain).
+- Transisi antar giliran harus jelas dan singkat (misal layar "Ganti ke Pemain 2" sebelum lanjut) agar tidak membingungkan.`;
+}
+
 export function buildGamePrompt(spec: GameSpec): string {
   const sessionId = crypto.randomUUID();
   const themeLabels = labelsFor(THEMES, spec.themes);
@@ -89,6 +108,15 @@ export function buildGamePrompt(spec: GameSpec): string {
   const specialInstructionsBlock = spec.specialInstructions
     ? `\n\n📌 INSTRUKSI KHUSUS TAMBAHAN DARI USER:\n${spec.specialInstructions}`
     : "";
+  const twoPlayerBlock = buildTwoPlayerBlock(spec);
+  const interactiveQualityBlock =
+    spec.mode === "interactive"
+      ? `\n\n🕹️ STANDAR KUALITAS GAME INTERAKTIF (WAJIB, INI PALING PENTING):
+- Ini BUKAN kuis pilihan ganda dengan kulit tema baru. Setiap interaksi (klik, drag, tap) harus terasa seperti bagian dari dunia/konsep game ini, lengkap dengan micro-animation (bounce, scale, particle kecil) di setiap aksi berhasil.
+- Rancang minimal satu elemen progres visual yang persisten sepanjang permainan dan terlihat "tumbuh"/berubah seiring pemain menjawab benar (dunia, peta, kota, kebun, panggung, dsb sesuai konsep) — jangan hanya angka skor polos.
+- Variasikan jenis tantangan di dalam game ini jika masuk akal untuk konsepnya (mis. campuran drag-drop dan klik-pilih), selama tetap satu alur yang koheren dan tidak membingungkan anak.
+- Feedback benar/salah harus spesifik untuk konsep ini (bukan sekadar highlight hijau/merah generik) — gunakan elemen visual dunia game tersebut sebagai reward/koreksi.`
+      : "";
 
   return `Kamu adalah game developer dan educational content creator yang berpengalaman membuat game edukasi interaktif. Kamu memahami prinsip desain UI yang disesuaikan target usia, learning psychology, dan cara membuat kode yang bersih serta maintainable. Setiap game yang kamu buat harus terasa seperti produk final yang polished — bukan demo atau prototipe.
 
@@ -122,10 +150,11 @@ ${designNotesLine}
 - Rancang pengalaman mekanik game (interaksi, animasi, feedback) supaya terasa nyata dan sesuai konteks materi/jenis game — bukan generik asal jadi. Contoh: kalau temanya berkaitan dengan aktivitas dunia nyata, buat interaksinya semirip mungkin dengan aktivitas aslinya.
 
 📐 KETENTUAN TEKNIS:
-- Responsive & mobile-first
+- WAJIB mobile-first: game ini akan dimainkan mayoritas di layar HP. Desain dan uji tata letak untuk lebar layar ~360-430px terlebih dahulu, baru sesuaikan ke layar lebih besar — bukan sebaliknya.
 - Semua soal/konten harus relevan dengan materi "${themeLabels}" (bukan soal generik)
 - Font besar, mudah dibaca sesuai target usia — minimal 18px untuk teks soal
-- Semua tombol & area tap: minimal ukuran 48x48px, nyaman disentuh
+- Semua tombol & area tap: minimal ukuran 48x48px, nyaman disentuh, dengan jarak antar tombol cukup agar tidak salah tap di layar kecil
+- Hindari elemen yang memerlukan scroll horizontal atau elemen terpotong di layar sempit
 
 🏠 HALAMAN WELCOMING (WAJIB — LAYAR PERTAMA SEBELUM GAME):
 - Background: warna tema yang kaya + ornamen/pola dekoratif (gelombang, bintang, atau bentuk geometris kecil)
@@ -136,7 +165,7 @@ ${designNotesLine}
 - Transisi smooth dari halaman welcoming ke halaman game (fade atau slide)
 
 🎮 MEKANISME GAME (WAJIB IKUTI):
-${buildMechanicsBlock(spec)}
+${buildMechanicsBlock(spec)}${interactiveQualityBlock}${twoPlayerBlock}
 
 ⚙️ ALUR GAME:
 0. Halaman Welcoming → klik tombol mulai → masuk game

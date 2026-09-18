@@ -20,8 +20,8 @@ import type {
 } from "./types";
 
 const MODE_OPTIONS: StepOption[] = [
-  { value: "basic", label: "Game Basic" },
-  { value: "interactive", label: "Game Interaktif" },
+  { value: "basic", label: "Game Basic", emoji: "🧩" },
+  { value: "interactive", label: "Game Interaktif", emoji: "🕹️" },
 ];
 
 const BASIC_ORDER: StepId[] = [
@@ -64,7 +64,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "single",
         allowCustom: false,
         optional: false,
-        prompt: "Halo! Yuk buat game edukasi seru. Mau bikin apa hari ini?",
+        prompt: "👋 Halo! Yuk buat game edukasi seru. Mau bikin apa hari ini?",
         options: MODE_OPTIONS,
       };
     case "gameTypes":
@@ -73,7 +73,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "multi",
         allowCustom: true,
         optional: false,
-        prompt: "Jenis game apa yang kamu mau? Boleh pilih lebih dari satu.",
+        prompt: "🎮 Jenis game apa yang kamu mau? Boleh pilih lebih dari satu.",
         options: GAME_TYPES,
       };
     case "interactiveConcept":
@@ -82,7 +82,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "single",
         allowCustom: true,
         optional: false,
-        prompt: "Pilih satu konsep game interaktif yang paling cocok:",
+        prompt: "🕹️ Pilih satu konsep game interaktif yang paling cocok:",
         options: INTERACTIVE_CONCEPTS,
       };
     case "themes":
@@ -91,7 +91,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "multi",
         allowCustom: true,
         optional: false,
-        prompt: "Materi atau tema apa yang mau diajarkan? Boleh pilih lebih dari satu.",
+        prompt: "📚 Materi atau tema apa yang mau diajarkan? Boleh pilih lebih dari satu.",
         options: THEMES,
       };
     case "ages":
@@ -100,7 +100,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "multi",
         allowCustom: true,
         optional: false,
-        prompt: "Untuk usia berapa game ini? Boleh pilih lebih dari satu rentang.",
+        prompt: "🎂 Untuk usia berapa game ini? Boleh pilih lebih dari satu rentang.",
         options: AGE_BRACKETS,
       };
     case "difficulty":
@@ -109,7 +109,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "single",
         allowCustom: true,
         optional: false,
-        prompt: "Seberapa menantang tingkat kesulitannya?",
+        prompt: "🎯 Seberapa menantang tingkat kesulitannya?",
         options: DIFFICULTIES,
       };
     case "features":
@@ -118,7 +118,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "multi",
         allowCustom: true,
         optional: false,
-        prompt: "Fitur tambahan apa saja yang kamu mau? Boleh pilih lebih dari satu.",
+        prompt: "⭐ Fitur tambahan apa saja yang kamu mau? Boleh pilih lebih dari satu.",
         options: FEATURES,
       };
     case "gameName":
@@ -128,7 +128,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         allowCustom: false,
         optional: false,
         freeText: true,
-        prompt: "Siapa nama brand/game ini?",
+        prompt: "🏷️ Siapa nama brand/game ini?",
         options: [],
       };
     case "colorTheme":
@@ -137,7 +137,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         selectMode: "single",
         allowCustom: true,
         optional: false,
-        prompt: "Tema warna apa yang kamu suka?",
+        prompt: "🎨 Tema warna apa yang kamu suka?",
         options: COLOR_THEMES,
       };
     case "designNotes":
@@ -147,7 +147,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         allowCustom: false,
         optional: true,
         freeText: true,
-        prompt: "Ada catatan desain khusus? (opsional, boleh dilewati)",
+        prompt: "📝 Ada catatan desain khusus? (opsional, boleh dilewati)",
         options: [],
       };
     case "specialInstructions":
@@ -157,7 +157,7 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         allowCustom: false,
         optional: true,
         freeText: true,
-        prompt: "Ada instruksi khusus lain sebelum game dibuat? (opsional, boleh dilewati)",
+        prompt: "📌 Ada instruksi khusus lain sebelum game dibuat? (opsional, boleh dilewati)",
         options: [],
       };
     case "done":
@@ -259,31 +259,31 @@ export function submitAnswer(state: FlowState, value: string[] | string): Submit
 function summarizeAnswer(stepId: StepId, answers: FlowAnswers): string {
   switch (stepId) {
     case "mode":
-      return answers.mode === "interactive" ? "Game Interaktif" : "Game Basic";
+      return answers.mode === "interactive" ? "🕹️ Game Interaktif" : "🧩 Game Basic";
     case "gameTypes":
-      return `Jenis Game: ${labelsFor(GAME_TYPES, answers.gameTypes ?? [])}`;
+      return `🎮 Jenis Game: ${labelsFor(GAME_TYPES, answers.gameTypes ?? [])}`;
     case "interactiveConcept":
-      return `Konsep: ${labelFor(INTERACTIVE_CONCEPTS, answers.interactiveConcept ?? "")}`;
+      return `🕹️ Konsep: ${labelFor(INTERACTIVE_CONCEPTS, answers.interactiveConcept ?? "")}`;
     case "themes":
-      return `Materi/Tema: ${labelsFor(THEMES, answers.themes ?? [])}`;
+      return `📚 Materi/Tema: ${labelsFor(THEMES, answers.themes ?? [])}`;
     case "ages":
-      return `Usia: ${labelsFor(AGE_BRACKETS, answers.ages ?? [])}`;
+      return `🎂 Usia: ${labelsFor(AGE_BRACKETS, answers.ages ?? [])}`;
     case "difficulty":
-      return `Tingkat Kesulitan: ${labelFor(DIFFICULTIES, answers.difficulty ?? "")}`;
+      return `🎯 Tingkat Kesulitan: ${labelFor(DIFFICULTIES, answers.difficulty ?? "")}`;
     case "features":
-      return `Fitur Tambahan: ${labelsFor(FEATURES, answers.features ?? [])}`;
+      return `⭐ Fitur Tambahan: ${labelsFor(FEATURES, answers.features ?? [])}`;
     case "gameName":
-      return `Nama Game: ${answers.gameName ?? ""}`;
+      return `🏷️ Nama Game: ${answers.gameName ?? ""}`;
     case "colorTheme":
-      return `Tema Warna: ${labelFor(COLOR_THEMES, answers.colorTheme ?? "")}`;
+      return `🎨 Tema Warna: ${labelFor(COLOR_THEMES, answers.colorTheme ?? "")}`;
     case "designNotes":
       return answers.designNotes
-        ? `Catatan Desain: ${answers.designNotes}`
-        : "Catatan Desain: (dilewati)";
+        ? `📝 Catatan Desain: ${answers.designNotes}`
+        : "📝 Catatan Desain: (dilewati)";
     case "specialInstructions":
       return answers.specialInstructions
-        ? `Instruksi Khusus: ${answers.specialInstructions}`
-        : "Instruksi Khusus: (dilewati)";
+        ? `📌 Instruksi Khusus: ${answers.specialInstructions}`
+        : "📌 Instruksi Khusus: (dilewati)";
     default:
       return "";
   }

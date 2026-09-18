@@ -1,16 +1,16 @@
 import type { StepOption } from "./types";
 
 export const GAME_TYPES: StepOption[] = [
-  { value: "kuis", label: "Kuis Pilihan Ganda" },
-  { value: "mencocokan", label: "Mencocokan" },
-  { value: "susun_huruf", label: "Susun Huruf" },
-  { value: "kartu_ingatan", label: "Kartu Ingatan" },
-  { value: "benar_salah", label: "Benar atau Salah" },
-  { value: "isi_rumpang", label: "Isi Kata Rumpang" },
-  { value: "urutkan", label: "Urutkan" },
-  { value: "tebak_gambar", label: "Tebak Gambar" },
-  { value: "seret_kelompok", label: "Seret & Kelompokkan" },
-  { value: "labirin", label: "Labirin Edukasi" },
+  { value: "kuis", label: "Kuis Pilihan Ganda", emoji: "🧠" },
+  { value: "mencocokan", label: "Mencocokan", emoji: "🔗" },
+  { value: "susun_huruf", label: "Susun Huruf", emoji: "🔤" },
+  { value: "kartu_ingatan", label: "Kartu Ingatan", emoji: "🃏" },
+  { value: "benar_salah", label: "Benar atau Salah", emoji: "✅" },
+  { value: "isi_rumpang", label: "Isi Kata Rumpang", emoji: "✏️" },
+  { value: "urutkan", label: "Urutkan", emoji: "🔢" },
+  { value: "tebak_gambar", label: "Tebak Gambar", emoji: "🖼️" },
+  { value: "seret_kelompok", label: "Seret & Kelompokkan", emoji: "🧺" },
+  { value: "labirin", label: "Labirin Edukasi", emoji: "🌀" },
 ];
 
 /** Layout + interaction rules Claude must follow for each basic game type. */
@@ -38,33 +38,33 @@ export const GAME_TYPE_MECHANICS: Record<string, string> = {
 };
 
 export const THEMES: StepOption[] = [
-  { value: "hijaiyah", label: "Hijaiyah" },
-  { value: "asmaul_husna", label: "Asmaul Husna" },
-  { value: "angka_berhitung", label: "Angka & Berhitung" },
-  { value: "nama_bulan", label: "Nama Bulan" },
-  { value: "nama_hari", label: "Nama Hari" },
-  { value: "warna", label: "Warna" },
-  { value: "bentuk_geometri", label: "Bentuk Geometri" },
-  { value: "hewan_habitat", label: "Hewan & Habitatnya" },
-  { value: "buah_sayur", label: "Buah & Sayur" },
-  { value: "profesi", label: "Profesi & Cita-cita" },
-  { value: "anggota_tubuh", label: "Anggota Tubuh" },
-  { value: "sains_dasar", label: "Sains Dasar" },
-  { value: "transportasi", label: "Transportasi" },
-  { value: "alfabet", label: "Alfabet" },
-  { value: "adab_akhlak", label: "Adab & Akhlak Islami" },
-  { value: "doa_harian", label: "Doa Sehari-hari" },
-  { value: "rukun_islam_iman", label: "Rukun Islam & Rukun Iman" },
-  { value: "tata_surya", label: "Tata Surya & Luar Angkasa" },
-  { value: "kebersihan_kesehatan", label: "Kebersihan & Kesehatan" },
-  { value: "bendera_negara", label: "Bendera & Negara" },
+  { value: "hijaiyah", label: "Hijaiyah", emoji: "🕌" },
+  { value: "asmaul_husna", label: "Asmaul Husna", emoji: "🌟" },
+  { value: "angka_berhitung", label: "Angka & Berhitung", emoji: "🔢" },
+  { value: "nama_bulan", label: "Nama Bulan", emoji: "📅" },
+  { value: "nama_hari", label: "Nama Hari", emoji: "☀️" },
+  { value: "warna", label: "Warna", emoji: "🎨" },
+  { value: "bentuk_geometri", label: "Bentuk Geometri", emoji: "🔷" },
+  { value: "hewan_habitat", label: "Hewan & Habitatnya", emoji: "🐾" },
+  { value: "buah_sayur", label: "Buah & Sayur", emoji: "🍎" },
+  { value: "profesi", label: "Profesi & Cita-cita", emoji: "👩‍⚕️" },
+  { value: "anggota_tubuh", label: "Anggota Tubuh", emoji: "🧍" },
+  { value: "sains_dasar", label: "Sains Dasar", emoji: "🔬" },
+  { value: "transportasi", label: "Transportasi", emoji: "🚗" },
+  { value: "alfabet", label: "Alfabet", emoji: "🔡" },
+  { value: "adab_akhlak", label: "Adab & Akhlak Islami", emoji: "🤲" },
+  { value: "doa_harian", label: "Doa Sehari-hari", emoji: "📿" },
+  { value: "rukun_islam_iman", label: "Rukun Islam & Rukun Iman", emoji: "☪️" },
+  { value: "tata_surya", label: "Tata Surya & Luar Angkasa", emoji: "🪐" },
+  { value: "kebersihan_kesehatan", label: "Kebersihan & Kesehatan", emoji: "🧼" },
+  { value: "bendera_negara", label: "Bendera & Negara", emoji: "🏳️" },
 ];
 
 export const AGE_BRACKETS: StepOption[] = [
-  { value: "3-4", label: "3-4 tahun" },
-  { value: "5-6", label: "5-6 tahun (TK)" },
-  { value: "7-8", label: "7-8 tahun (SD Awal)" },
-  { value: "9-10", label: "9-10 tahun (SD)" },
+  { value: "3-4", label: "3-4 tahun", emoji: "👶" },
+  { value: "5-6", label: "5-6 tahun (TK)", emoji: "🧒" },
+  { value: "7-8", label: "7-8 tahun (SD Awal)", emoji: "👦" },
+  { value: "9-10", label: "9-10 tahun (SD)", emoji: "🧑" },
 ];
 
 /** Explicit tone instruction per fixed age bracket — decided in code, not left
@@ -88,52 +88,99 @@ export const CUSTOM_AGE_TONE_FALLBACK = `SESUAIKAN NADA & GAYA DENGAN TARGET USI
 - Jika target usia menunjukkan remaja (13-16 tahun, SMP/SMA): nada lebih santai tapi tetap tidak kekanak-kanakan.`;
 
 export const DIFFICULTIES: StepOption[] = [
-  { value: "mudah", label: "Mudah" },
-  { value: "sedang", label: "Sedang" },
-  { value: "menantang", label: "Menantang" },
+  { value: "mudah", label: "Mudah", emoji: "😊" },
+  { value: "sedang", label: "Sedang", emoji: "😐" },
+  { value: "menantang", label: "Menantang", emoji: "🔥" },
 ];
 
 export const FEATURES: StepOption[] = [
-  { value: "skor_poin", label: "Skor & Poin" },
-  { value: "animasi_bintang", label: "Animasi Bintang / Confetti" },
-  { value: "coba_lagi", label: "Tombol Coba Lagi" },
-  { value: "timer", label: "Timer / Tantangan Waktu" },
-  { value: "level_bertahap", label: "Level Bertahap" },
-  { value: "badge", label: "Badge / Lencana Pencapaian" },
-  { value: "leaderboard", label: "Leaderboard Sesi (lokal)" },
-  { value: "hint", label: "Petunjuk / Hint" },
-  { value: "progress_bar", label: "Progress Bar" },
-  { value: "efek_suara", label: "Efek Suara Sederhana" },
+  { value: "skor_poin", label: "Skor & Poin", emoji: "🏆" },
+  { value: "animasi_bintang", label: "Animasi Bintang / Confetti", emoji: "🎉" },
+  { value: "coba_lagi", label: "Tombol Coba Lagi", emoji: "🔁" },
+  { value: "timer", label: "Timer / Tantangan Waktu", emoji: "⏱️" },
+  { value: "level_bertahap", label: "Level Bertahap", emoji: "📈" },
+  { value: "badge", label: "Badge / Lencana Pencapaian", emoji: "🎖️" },
+  { value: "leaderboard", label: "Leaderboard Sesi (lokal)", emoji: "🥇" },
+  { value: "hint", label: "Petunjuk / Hint", emoji: "💡" },
+  { value: "progress_bar", label: "Progress Bar", emoji: "📊" },
+  { value: "efek_suara", label: "Efek Suara Sederhana", emoji: "🔊" },
+  { value: "dua_pemain", label: "Mode 2 Pemain (Main Bareng)", emoji: "👨‍👩‍👧" },
 ];
 
+/** Feature value that turns on the shared/turn-based 2-player instruction
+ * block in the prompt (e.g. anak bermain bergantian dengan orang tua). */
+export const TWO_PLAYER_FEATURE_VALUE = "dua_pemain";
+
 export const COLOR_THEMES: StepOption[] = [
-  { value: "pink_ceria", label: "Pink Ceria" },
-  { value: "pelangi", label: "Pelangi" },
-  { value: "biru_muda", label: "Biru Muda / Langit" },
-  { value: "hijau_toska", label: "Hijau Toska" },
-  { value: "oranye_cerah", label: "Oranye Cerah" },
-  { value: "ungu_lavender", label: "Ungu Lavender" },
-  { value: "kuning_matahari", label: "Kuning Matahari" },
-  { value: "merah_ceri", label: "Merah Ceri" },
-  { value: "coklat_hangat", label: "Coklat Hangat" },
-  { value: "pastel_multicolor", label: "Pastel Multicolor" },
+  { value: "pink_ceria", label: "Pink Ceria", emoji: "🌸" },
+  { value: "pelangi", label: "Pelangi", emoji: "🌈" },
+  { value: "biru_muda", label: "Biru Muda / Langit", emoji: "💙" },
+  { value: "hijau_toska", label: "Hijau Toska", emoji: "🌿" },
+  { value: "oranye_cerah", label: "Oranye Cerah", emoji: "🧡" },
+  { value: "ungu_lavender", label: "Ungu Lavender", emoji: "💜" },
+  { value: "kuning_matahari", label: "Kuning Matahari", emoji: "💛" },
+  { value: "merah_ceri", label: "Merah Ceri", emoji: "❤️" },
+  { value: "coklat_hangat", label: "Coklat Hangat", emoji: "🤎" },
+  { value: "pastel_multicolor", label: "Pastel Multicolor", emoji: "🍬" },
 ];
 
 export const INTERACTIVE_CONCEPTS: StepOption[] = [
-  { value: "kartu_terbalik", label: "Dunia Kartu Terbalik" },
-  { value: "quest_rpg", label: "Petualangan Quest RPG" },
-  { value: "lab_seret_lepas", label: "Laboratorium Seret & Lepas" },
-  { value: "arena_kecepatan", label: "Arena Tantangan Kecepatan" },
-  { value: "kebun_dunia", label: "Pembangun Dunia Kebun" },
-  { value: "pulau_harta_karun", label: "Petualangan Pulau Harta Karun" },
-  { value: "roket_angkasa", label: "Balapan Roket Angkasa" },
-  { value: "kota_impian", label: "Kota Impian Bangun-Bangunan" },
-  { value: "detektif_cilik", label: "Detektif Misteri Cilik" },
-  { value: "kebun_binatang", label: "Kebun Binatang Interaktif" },
+  { value: "kartu_terbalik", label: "Dunia Kartu Terbalik", emoji: "🃏" },
+  { value: "quest_rpg", label: "Petualangan Quest RPG", emoji: "🗺️" },
+  { value: "lab_seret_lepas", label: "Laboratorium Seret & Lepas", emoji: "🧪" },
+  { value: "arena_kecepatan", label: "Arena Tantangan Kecepatan", emoji: "⚡" },
+  { value: "kebun_dunia", label: "Pembangun Dunia Kebun", emoji: "🌻" },
+  { value: "pulau_harta_karun", label: "Petualangan Pulau Harta Karun", emoji: "🏝️" },
+  { value: "roket_angkasa", label: "Balapan Roket Angkasa", emoji: "🚀" },
+  { value: "kota_impian", label: "Kota Impian Bangun-Bangunan", emoji: "🏙️" },
+  { value: "detektif_cilik", label: "Detektif Misteri Cilik", emoji: "🕵️" },
+  { value: "kebun_binatang", label: "Kebun Binatang Interaktif", emoji: "🦁" },
+  { value: "resto_chef", label: "Restoran Mini Chef", emoji: "🍳" },
+  { value: "sirkus_terampil", label: "Sirkus Terampil", emoji: "🎪" },
+  { value: "puzzle_ajaib", label: "Puzzle Dunia Ajaib", emoji: "🧩" },
+  { value: "panggung_musik", label: "Panggung Musik Ceria", emoji: "🎵" },
+  { value: "rumah_boneka", label: "Rumah Boneka Interaktif", emoji: "🏠" },
 ];
+
+/** Bespoke gameplay loop + question style per interactive concept — written
+ * specifically for that concept's name/fantasy, not a generic "be creative"
+ * instruction and not the basic-game quiz layout. */
+export const INTERACTIVE_CONCEPT_MECHANICS: Record<string, string> = {
+  kartu_terbalik:
+    "Sebarkan kartu-kartu besar bergaya dunia bertema materi, tertutup dengan pola unik. Pemain membalik 2 kartu tiap giliran untuk mencari pasangan (gambar ↔ istilah/jawaban materi). Setiap pasangan cocok memicu satu elemen 'dunia' di latar belakang menyala/tumbuh (bukan sekadar kartu hilang) — beri rasa dunia yang hidup dan makin lengkap seiring progres.",
+  quest_rpg:
+    "Karakter kecil pemain berjalan di peta perjalanan linear/bercabang sederhana dari titik ke titik. Di tiap titik ada 'penjaga' ramah yang mengajukan satu tantangan terkait materi; jawaban benar memberi item/EXP dan membuka jalan ke titik berikutnya, jawaban salah cukup beri kesempatan coba lagi tanpa hukuman berat. Akhiri dengan perayaan 'naik level' di titik akhir peta.",
+  lab_seret_lepas:
+    "Tampilkan meja laboratorium dengan beberapa 'bahan/objek' yang harus diseret (drag & drop) ke dalam wadah/kategori sesuai materi. Kombinasi benar memicu reaksi visual seru (percikan warna/gelembung, aman dan lucu — bukan menakutkan). Bahan yang belum dikelompokkan tetap terlihat menunggu di rak sampai semua selesai.",
+  arena_kecepatan:
+    "Serangkaian tantangan singkat muncul cepat berurutan dengan ring/bar waktu berjalan di sekitar layar. Pemain menjawab secepat mungkin untuk mengejar 'combo streak' — jawaban benar berturut-turut memicu efek visual combo yang makin meriah (api/kilat/bintang bertumpuk).",
+  kebun_dunia:
+    "Setiap jawaban benar menumbuhkan satu elemen kebun (bunga, pohon kecil, atau hewan kebun) di lahan virtual milik pemain, tumbuh dengan animasi mekar. Di akhir permainan, tampilkan kebun yang sudah penuh tumbuh sebagai hasil karya personal pemain, lalu beri opsi 'lihat kebunku' sebelum ke skor akhir.",
+  pulau_harta_karun:
+    "Tampilkan peta pulau dengan beberapa titik X tersembunyi. Setiap titik dibuka dengan menjawab satu pertanyaan/teka-teki terkait materi; titik yang terbuka mengungkap sebagian jalur peta dan memberi koin virtual. Di titik terakhir, peti harta karun terbuka dengan animasi perayaan besar.",
+  roket_angkasa:
+    "Roket pemain melaju di lintasan angkasa berlatar bintang paralaks; setiap jawaban benar mendorong roket maju signifikan menuju planet tujuan, jawaban salah membuat roket melambat sedikit (jangan pernah mundur/gagal total, supaya tetap memacu semangat). Rayakan pendaratan di planet tujuan sebagai puncak permainan.",
+  kota_impian:
+    "Setiap jawaban benar membuka satu gedung/bangunan baru yang langsung ditambahkan ke skyline kota virtual milik pemain (rumah, taman, gedung ikonik sesuai tema). Kota yang makin ramai dan berwarna jadi representasi visual kemajuan belajar; tampilkan skyline penuh di halaman skor akhir.",
+  detektif_cilik:
+    "Sajikan satu 'kasus' ringan dan ceria (mis. mencari benda hilang, memecahkan kode rahasia) — bukan tema menakutkan. Tiap pertanyaan terkait materi yang dijawab benar memberi satu 'petunjuk' yang dikumpulkan di papan investigasi virtual; setelah semua petunjuk terkumpul, ungkap solusi kasus sebagai klimaks permainan.",
+  kebun_binatang:
+    "Pemain 'membuka kandang' hewan baru satu per satu di kebun binatang virtual dengan menjawab pertanyaan terkait materi per hewan. Hewan yang sudah terbuka bisa disentuh untuk animasi/reaksi lucu singkat sebagai reward, dan berjejer di zoo virtual yang makin ramai.",
+  resto_chef:
+    "Pemain berperan sebagai koki cilik yang menerima 'pesanan' pelanggan animasi. Setiap pesanan diselesaikan dengan menjawab pertanyaan materi atau menyeret bahan yang benar ke piring (drag & drop). Pesanan yang selesai benar disajikan ke pelanggan yang terlihat senang; pesanan menumpuk jadi skor 'pelanggan puas'.",
+  sirkus_terampil:
+    "Susun beberapa mini-tantangan singkat bergaya atraksi sirkus berurutan sebagai satu 'pertunjukan' (mis. melempar bola ke keranjang berlabel jawaban benar, menjaga karakter tetap seimbang selama menjawab tepat waktu). Penonton animasi bertepuk tangan/bersorak setiap atraksi berhasil, memberi rasa pertunjukan yang hidup.",
+  puzzle_ajaib:
+    "Satu gambar besar bertema materi terbagi menjadi beberapa potongan puzzle yang terkunci. Setiap jawaban benar pada pertanyaan terkait materi membuka satu potongan untuk dipasang (drag ke slot yang tepat). Gambar utuh yang akhirnya terungkap jadi reward visual utama di penghujung permainan.",
+  panggung_musik:
+    "Pemain 'tampil' di panggung virtual; setiap jawaban benar menambahkan satu instrumen, penari, atau lampu sorot baru ke panggung sehingga pertunjukan makin ramai dan meriah secara visual seiring progres. Tutup dengan 'pertunjukan penuh' saat semua soal selesai, lengkap dengan tepuk tangan penonton.",
+  rumah_boneka:
+    "Pemain mendekorasi satu ruangan rumah boneka virtual; setiap jawaban benar membuka satu item dekorasi baru (furnitur/hiasan sesuai tema) untuk ditempatkan lewat drag & drop ke ruangan. Rancang agar mudah dimainkan berdua secara bergantian (mis. anak & orang tua bergiliran menjawab) sambil menata rumah bersama.",
+};
 
 export const CUSTOM_OPTION_VALUE = "__custom__";
 export const CUSTOM_OPTION_LABEL = "Ketik Sendiri";
+export const CUSTOM_OPTION_EMOJI = "✏️";
 
 export function labelFor(options: StepOption[], value: string): string {
   return options.find((o) => o.value === value)?.label ?? value;

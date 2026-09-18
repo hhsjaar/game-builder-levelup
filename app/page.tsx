@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import ChatPanel from "@/components/ChatPanel";
 import { getOrCreateClientId } from "@/lib/client-id";
+import { getActiveTheme, setTheme, type Theme } from "@/lib/theme";
 import type { ConversationRecord, MessageRecord } from "@/lib/types";
 
 interface GameInfo {
@@ -20,6 +21,14 @@ export default function HomePage() {
   const [game, setGame] = useState<GameInfo | null>(null);
   const [loadingThread, setLoadingThread] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [theme, setThemeState] = useState<Theme>(() => getActiveTheme());
+
+  const handleToggleTheme = useCallback(() => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    setThemeState(next);
+  }, [theme]);
 
   const refreshSidebar = useCallback(async (id: string) => {
     setLoadingSidebar(true);
@@ -58,6 +67,7 @@ export default function HomePage() {
       setMessages(data.messages);
       setGame(null);
       setConversations((prev) => [data.conversation, ...prev]);
+      setSidebarOpen(false);
     } catch (err) {
       console.error(err);
       setGlobalError(err instanceof Error ? err.message : "Gagal membuat chat baru.");
@@ -78,6 +88,7 @@ export default function HomePage() {
         setActiveConversation(data.conversation);
         setMessages(data.messages);
         setGame(data.game ?? null);
+        setSidebarOpen(false);
       } catch (err) {
         console.error(err);
         setGlobalError(err instanceof Error ? err.message : "Gagal membuka percakapan.");
@@ -116,6 +127,10 @@ export default function HomePage() {
           onSelect={handleSelectConversation}
           onNewChat={handleNewChat}
           loading={loadingSidebar}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
         />
         <ChatPanel
           clientId={clientId}
@@ -126,6 +141,7 @@ export default function HomePage() {
           onConversationChange={handleConversationChange}
           onGameReady={setGame}
           onNewGame={handleNewChat}
+          onOpenSidebar={() => setSidebarOpen(true)}
           loadingThread={loadingThread}
         />
       </div>
