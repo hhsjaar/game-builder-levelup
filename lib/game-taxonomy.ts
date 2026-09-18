@@ -58,6 +58,13 @@ export const THEMES: StepOption[] = [
   { value: "tata_surya", label: "Tata Surya & Luar Angkasa", emoji: "🪐" },
   { value: "kebersihan_kesehatan", label: "Kebersihan & Kesehatan", emoji: "🧼" },
   { value: "bendera_negara", label: "Bendera & Negara", emoji: "🏳️" },
+  { value: "bahasa_inggris", label: "Bahasa Inggris Dasar", emoji: "🇬🇧" },
+  { value: "bahasa_indonesia", label: "Bahasa Indonesia", emoji: "🇮🇩" },
+  { value: "perkalian_pembagian", label: "Perkalian & Pembagian", emoji: "✖️" },
+  { value: "ips_sosial", label: "Pengetahuan Sosial (IPS)", emoji: "🌏" },
+  { value: "pancasila_ppkn", label: "Pancasila & PPKn", emoji: "🕊️" },
+  { value: "seni_kerajinan", label: "Seni & Kerajinan", emoji: "🖌️" },
+  { value: "olahraga_pjok", label: "Olahraga & Gerak Tubuh", emoji: "⚽" },
 ];
 
 export const AGE_BRACKETS: StepOption[] = [
