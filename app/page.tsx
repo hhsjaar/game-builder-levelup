@@ -22,7 +22,18 @@ export default function HomePage() {
   const [loadingThread, setLoadingThread] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [theme, setThemeState] = useState<Theme>(() => getActiveTheme());
+  // Always starts as "light" to match the server-rendered HTML exactly (SSR
+  // can't read localStorage/matchMedia) — the inline script in layout.tsx
+  // already paints the correct theme before this ever shows. Synced to the
+  // real value right after mount below, avoiding a hydration mismatch.
+  const [theme, setThemeState] = useState<Theme>("light");
+
+  useEffect(() => {
+    // One-time sync with the DOM/localStorage theme set by the blocking
+    // init script — a legitimate read-external-state-on-mount effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setThemeState(getActiveTheme());
+  }, []);
 
   const handleToggleTheme = useCallback(() => {
     const next: Theme = theme === "dark" ? "light" : "dark";

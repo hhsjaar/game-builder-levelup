@@ -37,6 +37,7 @@ export default function RootLayout({
       lang="id"
       translate="no"
       className={`${baloo.variable} ${nunito.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
