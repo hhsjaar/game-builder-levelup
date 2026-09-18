@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer, hasReachedGenerationLimit, GENERATIONS_PER_DAY_LIMIT } from "@/lib/supabase-server";
 import { getStepDefinition, submitAnswer, toGameSpec } from "@/lib/flow-machine";
 import { buildGamePrompt } from "@/lib/prompt-template";
-import { generateGameHtml } from "@/lib/anthropic";
 import { errorMessage } from "@/lib/error-message";
 import type { ConversationRecord } from "@/lib/types";
 
@@ -133,6 +132,11 @@ export async function POST(
 
     try {
       const prompt = buildGamePrompt(spec);
+      // Loaded only when actually generating — the Anthropic SDK is fairly
+      // heavy to init, and every one of the ~9 earlier wizard steps hits this
+      // same route handler, so a static top-level import was paying that
+      // cost on every step, not just this one.
+      const { generateGameHtml } = await import("@/lib/anthropic");
       const html = await generateGameHtml(prompt);
 
       const { data: game, error: gameError } = await supabaseServer

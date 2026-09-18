@@ -155,6 +155,7 @@ ${designNotesLine}
 - Font besar, mudah dibaca sesuai target usia — minimal 18px untuk teks soal
 - Semua tombol & area tap: minimal ukuran 48x48px, nyaman disentuh, dengan jarak antar tombol cukup agar tidak salah tap di layar kecil
 - Hindari elemen yang memerlukan scroll horizontal atau elemen terpotong di layar sempit
+- JIKA mekanisme game melibatkan drag & drop (menyeret elemen): JANGAN gunakan HTML5 Drag and Drop API bawaan (atribut "draggable", event dragstart/dragover/drop) karena TIDAK berfungsi di layar sentuh HP. WAJIB implementasikan drag manual berbasis pointer/touch event (pointerdown/pointermove/pointerup, atau touchstart/touchmove/touchend + mousedown/mousemove/mouseup sebagai fallback desktop) supaya benar-benar bisa diseret pakai jari di HP.
 
 🏠 HALAMAN WELCOMING (WAJIB — LAYAR PERTAMA SEBELUM GAME):
 - Background: warna tema yang kaya + ornamen/pola dekoratif (gelombang, bintang, atau bentuk geometris kecil)
