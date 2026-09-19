@@ -16,7 +16,10 @@ module.exports = {
       cwd: __dirname,
       env: {
         NODE_ENV: "production",
-        PORT: 3000,
+        // 3000 is already taken by another PM2 app on the shared VPS this
+        // runs on (auto-video-editor) — 3001 keeps this from colliding with
+        // it. Match this to proxy_pass in deploy/nginx.conf.example.
+        PORT: 3001,
       },
       instances: 1,
       autorestart: true,

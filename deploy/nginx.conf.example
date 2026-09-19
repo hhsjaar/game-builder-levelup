@@ -1,19 +1,24 @@
-# Nginx reverse proxy for game-prompt-studio, running via PM2 on 127.0.0.1:3000
-# (see ../ecosystem.config.js). Copy to /etc/nginx/sites-available/game-prompt-studio,
-# fill in your domain, then:
+# Nginx reverse proxy for game-prompt-studio, running via PM2 on 127.0.0.1:3001
+# (see ../ecosystem.config.js — 3001, not 3000, because this VPS already runs
+# another PM2 app named auto-video-editor on 3000). This server block is
+# additive: it does not touch the existing editor.burjolevelup.com or
+# harusnyalotau.website blocks already in /etc/nginx/sites-enabled/.
+#
+# Copy to /etc/nginx/sites-available/game-prompt-studio, fill in your
+# subdomain, then:
 #   sudo ln -s /etc/nginx/sites-available/game-prompt-studio /etc/nginx/sites-enabled/
 #   sudo nginx -t && sudo systemctl reload nginx
-#   sudo certbot --nginx -d your-domain.com   # adds HTTPS + redirect on top of this
+#   sudo certbot --nginx -d your-subdomain.example.com   # adds HTTPS + redirect on top of this
 #
 # The long proxy_*_timeout values are the whole point of moving off Vercel:
 # game generation can legitimately take several minutes, and Nginx's default
 # 60s read timeout would kill it long before Claude finishes.
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name your-subdomain.example.com;
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:3001;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
