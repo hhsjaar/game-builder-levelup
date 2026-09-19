@@ -16,8 +16,17 @@ const MODEL = process.env.GAME_GEN_MODEL || "claude-opus-5";
 export async function generateGameHtml(prompt: string): Promise<string> {
   const stream = anthropic.messages.stream({
     model: MODEL,
-    max_tokens: 20000,
+    // Generous ceiling so a rich, longer HTML/CSS/JS output never runs out of
+    // room — this is a safety net, not a target; unused budget costs nothing.
+    max_tokens: 48000,
     thinking: { type: "adaptive" },
+    // "medium" — measured "high" against this task and adaptive thinking
+    // spent a huge, unpredictable share of the token budget reasoning before
+    // writing any HTML, twice producing a silently truncated document that
+    // still looked like a "successful" (non-empty) response, and once taking
+    // 7m46s end to end (unusable, and well past our own maxDuration budget).
+    // "medium" plus the explicit self-check instruction in the prompt is the
+    // reliable option — keep it unless future measurement says otherwise.
     output_config: { effort: "medium" },
     messages: [{ role: "user", content: prompt }],
   });
@@ -35,10 +44,26 @@ export async function generateGameHtml(prompt: string): Promise<string> {
   );
 
   if (!textBlock || !textBlock.text.trim()) {
+    if (response.stop_reason === "max_tokens") {
+      throw new Error(
+        "Game terlalu kompleks untuk dibuat sekali jalan (kehabisan batas token sebelum selesai). Coba kurangi jumlah fitur tambahan/jenis game yang dipilih, atau coba lagi."
+      );
+    }
     throw new Error("Claude tidak mengembalikan konten HTML.");
   }
 
-  return stripCodeFences(textBlock.text);
+  const html = stripCodeFences(textBlock.text);
+
+  // Defense in depth: a truncated response (hit max_tokens mid-document) can
+  // still leave a non-empty but broken text block — catch that explicitly
+  // instead of silently saving a corrupted game.
+  if (!/<\/html\s*>\s*$/i.test(html)) {
+    throw new Error(
+      "Game yang dihasilkan tampak terpotong (tidak lengkap). Coba kurangi jumlah fitur tambahan/jenis game yang dipilih, atau coba lagi."
+    );
+  }
+
+  return html;
 }
 
 function stripCodeFences(text: string): string {

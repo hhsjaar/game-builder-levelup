@@ -147,6 +147,7 @@ export const INTERACTIVE_CONCEPTS: StepOption[] = [
   { value: "puzzle_ajaib", label: "Puzzle Dunia Ajaib", emoji: "🧩" },
   { value: "panggung_musik", label: "Panggung Musik Ceria", emoji: "🎵" },
   { value: "rumah_boneka", label: "Rumah Boneka Interaktif", emoji: "🏠" },
+  { value: "pabrik_karakter", label: "Pabrik Karakter Ajaib", emoji: "🏭" },
 ];
 
 /** Bespoke gameplay loop + question style per interactive concept — written
@@ -183,6 +184,8 @@ export const INTERACTIVE_CONCEPT_MECHANICS: Record<string, string> = {
     "Pemain 'tampil' di panggung virtual; setiap jawaban benar menambahkan satu instrumen, penari, atau lampu sorot baru ke panggung sehingga pertunjukan makin ramai dan meriah secara visual seiring progres. Tutup dengan 'pertunjukan penuh' saat semua soal selesai, lengkap dengan tepuk tangan penonton.",
   rumah_boneka:
     "Pemain mendekorasi satu ruangan rumah boneka virtual; setiap jawaban benar membuka satu item dekorasi baru (furnitur/hiasan sesuai tema) untuk ditempatkan lewat drag & drop ke ruangan. Rancang agar mudah dimainkan berdua secara bergantian (mis. anak & orang tua bergiliran menjawab) sambil menata rumah bersama.",
+  pabrik_karakter:
+    "Pemain merakit karakter/makhluk unik dengan memilih dari MAKSIMAL 3 kategori bagian saja (contoh: bentuk badan, warna, dan satu aksesoris) — JANGAN lebih dari 3 kategori, supaya kode tetap ringkas dan cepat dibuat. Bangun tampilan karakter dari bentuk CSS sederhana (div bulat/oval yang diwarnai) dikombinasikan dengan 1-2 emoji sebagai aksesoris/wajah — JANGAN menggambar SVG custom terpisah untuk tiap pilihan (supaya jumlah kode terkendali). Setiap pilihan LANGSUNG terlihat di preview karakter (bukan teks/dropdown), jadi anak yang belum lancar membaca tetap bisa bermain. Sediakan tombol 'Acak!' untuk kombinasi kejutan dengan nama lucu otomatis, dan tombol 'Simpan ke Koleksi' (localStorage) untuk mengumpulkan karakter. Karakter yang sudah jadi bisa disentuh untuk animasi reaksi singkat (melompat/goyang). Selipkan satu pertanyaan singkat terkait materi sebelum tiap kategori terbuka (mis. jawab benar dulu baru bisa memilih warna).",
 };
 
 export const CUSTOM_OPTION_VALUE = "__custom__";

@@ -7,9 +7,11 @@ import type { ConversationRecord } from "@/lib/types";
 
 export const runtime = "nodejs";
 // Game generation (Claude call with a large single-file HTML output) routinely
-// takes well over 60s. Vercel Hobby allows up to 300s with Fluid Compute
-// (the current default) — 180s leaves headroom under that ceiling.
-export const maxDuration = 180;
+// takes well over 60s, and richer/interactive concepts (voice narration,
+// collection systems, custom drag interactions) have been observed taking
+// 2+ minutes at "high" effort. Vercel Hobby allows up to 300s with Fluid
+// Compute (the current default) — 280s leaves a 20s safety margin under that.
+export const maxDuration = 280;
 
 export async function POST(
   req: NextRequest,

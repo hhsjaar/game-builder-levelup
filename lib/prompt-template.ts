@@ -117,6 +117,14 @@ export function buildGamePrompt(spec: GameSpec): string {
 - Variasikan jenis tantangan di dalam game ini jika masuk akal untuk konsepnya (mis. campuran drag-drop dan klik-pilih), selama tetap satu alur yang koheren dan tidak membingungkan anak.
 - Feedback benar/salah harus spesifik untuk konsep ini (bukan sekadar highlight hijau/merah generik) — gunakan elemen visual dunia game tersebut sebagai reward/koreksi.`
       : "";
+  const wowFactorBlock = `\n\n✨ ELEMEN "WOW" (SANGAT DIANJURKAN — INI YANG MEMBEDAKAN GAME PREMIUM DARI KUIS BIASA):
+Pilih SATU (1) elemen berikut yang PALING cocok dengan konsep/tema game ini, dan implementasikan dengan detail serta polish tinggi (bukan sekadar disebut di teks). Pilih hanya satu — menambah lebih dari satu membuat kode terlalu panjang dan berisiko tidak selesai/rusak:
+- Karakter yang benar-benar hidup: mata mengikuti gerakan jari/kursor, animasi melompat/tertawa/goyang saat disentuh atau saat jawaban benar — bukan cuma diam di tempat.
+- Narasi/reaksi suara: pakai Web Speech API bawaan browser (window.speechSynthesis, bahasa "id-ID") untuk membacakan soal atau dialog karakter, dengan tombol putar ulang. Bungkus dengan pengecekan ketersediaan API agar tidak error jika tidak didukung.
+- Sistem koleksi & simpan: pemain mengumpulkan sesuatu (lencana, karakter, kartu) yang tersimpan lewat localStorage, memberi alasan untuk main lagi lain waktu.
+- Elemen kejutan/acak: tombol "Kejutan!"/"Acak!" yang menghasilkan variasi/kombinasi acak sehingga tiap sesi bermain terasa beda.
+- Kustomisasi visual: pemain memilih/menukar bagian tampilan (warna, aksesoris, bentuk) sebagai bagian dari gameplay itu sendiri, dan hasil pilihannya langsung terlihat sebagai gambar/visual — bukan teks — sehingga anak yang belum lancar membaca tetap bisa bermain.
+Jangan tambahkan elemen lain di luar satu pilihan ini — utamakan mekanisme inti game (di atas) benar-benar solid dan bebas bug dulu, baru elemen wow sebagai pemanis.`;
 
   return `Kamu adalah game developer dan educational content creator yang berpengalaman membuat game edukasi interaktif. Kamu memahami prinsip desain UI yang disesuaikan target usia, learning psychology, dan cara membuat kode yang bersih serta maintainable. Setiap game yang kamu buat harus terasa seperti produk final yang polished — bukan demo atau prototipe.
 
@@ -166,7 +174,7 @@ ${designNotesLine}
 - Transisi smooth dari halaman welcoming ke halaman game (fade atau slide)
 
 🎮 MEKANISME GAME (WAJIB IKUTI):
-${buildMechanicsBlock(spec)}${interactiveQualityBlock}${twoPlayerBlock}
+${buildMechanicsBlock(spec)}${interactiveQualityBlock}${wowFactorBlock}${twoPlayerBlock}
 
 ⚙️ ALUR GAME:
 0. Halaman Welcoming → klik tombol mulai → masuk game
@@ -184,6 +192,12 @@ ${buildMechanicsBlock(spec)}${interactiveQualityBlock}${twoPlayerBlock}
 - Skor real-time di pojok kanan atas
 - Skor akhir: nilai, bintang (1–3), pesan penyemangat, tombol "Main Lagi"
 - Terapkan fitur tambahan berikut secara nyata dalam gameplay (bukan hanya dekorasi): ${featureLabels}${specialInstructionsBlock}
+
+✅ PERIKSA SEBELUM SELESAI (WAJIB):
+Sebelum mengirim jawaban akhir, periksa ulang kode JavaScript-mu sendiri:
+- Setiap nama fungsi yang dipanggil dari onclick="..." atau addEventListener(...) harus benar-benar didefinisikan persis dengan nama yang sama (typo nama fungsi adalah kesalahan paling umum dan membuat seluruh game gagal total).
+- Tidak ada syntax error yang bisa menghentikan seluruh script (kurung/kutip tidak seimbang, koma tertinggal, dsb).
+- Semua elemen yang direferensikan lewat document.getElementById/querySelector benar-benar ada di HTML dengan id/selector yang sama persis.
 
 📤 FORMAT OUTPUT (WAJIB):
 Balas HANYA dengan satu file HTML utuh dan valid, dimulai langsung dari "<!DOCTYPE html>" tanpa teks pembuka, penjelasan, atau markdown code fence apa pun. Semua CSS dan JavaScript harus inline/embedded dalam file HTML tersebut (single-file, siap dibuka langsung di browser).`;
