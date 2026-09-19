@@ -124,7 +124,7 @@ export default function HomePage() {
   return (
     <div className="flex h-screen w-full flex-col overflow-hidden">
       {globalError && (
-        <div className="flex items-center justify-between gap-3 border-b-2 border-danger bg-danger/10 px-4 py-2 text-sm font-bold text-danger">
+        <div className="flex items-center justify-between gap-3 border-b border-danger/30 bg-danger/8 px-4 py-2 text-sm font-medium text-danger">
           <span>{globalError}</span>
           <button onClick={() => setGlobalError(null)} className="shrink-0 underline">
             Tutup

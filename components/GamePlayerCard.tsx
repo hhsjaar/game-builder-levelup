@@ -21,42 +21,55 @@ export default function GamePlayerCard({ gameId, html, gameName, onNewGame }: Ga
   }
 
   return (
-    <div className="mt-2 flex animate-pop-in flex-col gap-3 rounded-3xl border-2 border-card-border bg-card-bg p-3 shadow-lg">
-      <p className="flex items-center gap-1.5 text-sm font-extrabold text-foreground">
-        <span className="animate-wiggle text-lg">🎉</span> Game kamu siap dimainkan!
+    <div className="mt-1 flex animate-slide-up flex-col gap-3 ps-[34px]">
+      <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+        <span>🎉</span> Game kamu siap dimainkan!
       </p>
       <div
-        className="overflow-hidden rounded-2xl border-2 border-border bg-background-alt"
-        style={{ aspectRatio: "9 / 14", maxHeight: "min(65vh, 520px)" }}
+        className="overflow-hidden rounded-2xl border border-card-border bg-card-bg"
+        style={{ boxShadow: "var(--card-shadow)" }}
       >
-        <iframe
-          key={gameId}
-          sandbox="allow-scripts"
-          srcDoc={html}
-          className="h-full w-full border-0"
-          title={gameName ?? "Game"}
-        />
+        <div className="flex items-center gap-1.5 border-b border-card-border bg-background-alt px-3 py-2">
+          <span className="h-2 w-2 rounded-full bg-danger/60" />
+          <span className="h-2 w-2 rounded-full bg-accent/60" />
+          <span className="h-2 w-2 rounded-full bg-success/60" />
+          <span className="ml-2 truncate text-xs font-medium text-muted">
+            {gameName || "Game"}
+          </span>
+        </div>
+        <div
+          className="bg-background-alt"
+          style={{ aspectRatio: "9 / 14", maxHeight: "min(65vh, 520px)" }}
+        >
+          <iframe
+            key={gameId}
+            sandbox="allow-scripts"
+            srcDoc={html}
+            className="h-full w-full border-0"
+            title={gameName ?? "Game"}
+          />
+        </div>
       </div>
       <div className="flex flex-wrap gap-2">
         <a
           href={`/play/${gameId}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="min-h-11 flex-1 rounded-full bg-primary px-4 py-2 text-center text-sm font-bold text-primary-foreground shadow-sm shadow-primary/30 transition active:scale-95 sm:flex-none"
+          className="flex min-h-10 flex-1 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover active:scale-[0.98] sm:flex-none"
         >
-          🎮 Main Fullscreen
+          Main Fullscreen
         </a>
         <button
           onClick={handleDownload}
-          className="min-h-11 rounded-full border-2 border-border px-4 py-2 text-sm font-bold text-foreground transition active:scale-95"
+          className="min-h-10 rounded-xl border border-border px-4 text-sm font-medium text-foreground transition hover:bg-foreground/5 active:scale-[0.98]"
         >
-          ⬇️ Unduh HTML
+          Unduh HTML
         </button>
         <button
           onClick={onNewGame}
-          className="min-h-11 rounded-full border-2 border-purple px-4 py-2 text-sm font-bold text-purple transition active:scale-95"
+          className="min-h-10 rounded-xl border border-border px-4 text-sm font-medium text-foreground transition hover:bg-foreground/5 active:scale-[0.98]"
         >
-          ✨ Buat Game Baru
+          Buat Game Baru
         </button>
       </div>
     </div>

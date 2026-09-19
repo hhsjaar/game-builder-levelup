@@ -13,7 +13,7 @@ const MODEL = process.env.GAME_GEN_MODEL || "claude-opus-5";
 /** Sends the assembled game prompt to Claude and returns the raw HTML document
  * text, ready to store/render. Streams internally (per Anthropic SDK guidance)
  * so a large response doesn't hit platform/HTTP timeouts. */
-export async function generateGameHtml(prompt: string): Promise<string> {
+export async function generateGameHtml(systemPrompt: string, userPrompt: string): Promise<string> {
   const stream = anthropic.messages.stream({
     model: MODEL,
     // Generous ceiling so a rich, longer HTML/CSS/JS output never runs out of
@@ -28,7 +28,13 @@ export async function generateGameHtml(prompt: string): Promise<string> {
     // "medium" plus the explicit self-check instruction in the prompt is the
     // reliable option — keep it unless future measurement says otherwise.
     output_config: { effort: "medium" },
-    messages: [{ role: "user", content: prompt }],
+    // SYSTEM_PROMPT (lib/prompt-template.ts) is byte-identical on every
+    // generation — it holds the persona/design/engineering rules, none of
+    // which depend on the user's spec. Marking it ephemeral-cacheable means
+    // Claude only pays full input-token price for those ~1.5k tokens once
+    // per 5-minute window instead of on every single game generated.
+    system: [{ type: "text", text: systemPrompt, cache_control: { type: "ephemeral" } }],
+    messages: [{ role: "user", content: userPrompt }],
   });
 
   const response = await stream.finalMessage();

@@ -62,9 +62,9 @@ export default function OptionPicker({ definition, onSubmit, disabled }: OptionP
 
   if (definition.freeText) {
     return (
-      <div className="mt-2 flex animate-pop-in flex-col gap-2.5">
+      <div className="mt-1 flex animate-slide-up flex-col gap-2.5 ps-[34px]">
         <textarea
-          className="w-full rounded-2xl border-2 border-border bg-card-bg p-3.5 text-base outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15 sm:text-sm"
+          className="w-full rounded-xl border border-border bg-card-bg p-3.5 text-base outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15 sm:text-sm"
           rows={2}
           placeholder={definition.optional ? "Opsional, boleh dilewati..." : "Ketik jawabanmu..."}
           value={freeText}
@@ -75,17 +75,17 @@ export default function OptionPicker({ definition, onSubmit, disabled }: OptionP
           <button
             onClick={() => onSubmit(freeText.trim())}
             disabled={disabled || (!freeText.trim() && !definition.optional)}
-            className="min-h-12 flex-1 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-sm shadow-primary/30 transition active:scale-95 disabled:opacity-40 sm:flex-none"
+            className="min-h-10 flex-1 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover active:scale-[0.98] disabled:opacity-40 sm:flex-none"
           >
-            Lanjut 👉
+            Lanjut
           </button>
           {definition.optional && (
             <button
               onClick={() => onSubmit("")}
               disabled={disabled}
-              className="min-h-12 rounded-full border-2 border-border px-5 text-sm font-bold text-muted transition active:scale-95"
+              className="min-h-10 rounded-xl border border-border px-5 text-sm font-medium text-muted transition hover:bg-foreground/5 active:scale-[0.98]"
             >
-              Lewati ⏭️
+              Lewati
             </button>
           )}
         </div>
@@ -94,20 +94,19 @@ export default function OptionPicker({ definition, onSubmit, disabled }: OptionP
   }
 
   return (
-    <div className="mt-2 flex animate-pop-in flex-col gap-3">
+    <div className="mt-1 flex animate-slide-up flex-col gap-3 ps-[34px]">
       <div className="flex flex-wrap gap-2">
-        {definition.options.map((opt, i) => {
+        {definition.options.map((opt) => {
           const active = selected.includes(opt.value);
           return (
             <button
               key={opt.value}
               onClick={() => toggleOption(opt.value)}
               disabled={disabled}
-              style={{ animationDelay: `${i * 30}ms` }}
-              className={`animate-pop-in min-h-11 rounded-full border-2 px-4 py-2 text-sm font-bold transition-all active:scale-95 ${
+              className={`min-h-10 rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-[0.97] ${
                 active
-                  ? "scale-[1.03] border-primary bg-primary text-primary-foreground shadow-md shadow-primary/30"
-                  : "border-border bg-card-bg text-foreground hover:border-primary hover:-translate-y-0.5"
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card-bg text-foreground hover:border-primary/50 hover:bg-primary/5"
               } disabled:opacity-40`}
             >
               {opt.emoji ? `${opt.emoji} ` : ""}
@@ -120,10 +119,10 @@ export default function OptionPicker({ definition, onSubmit, disabled }: OptionP
           <button
             onClick={toggleCustom}
             disabled={disabled}
-            className={`min-h-11 rounded-full border-2 px-4 py-2 text-sm font-bold transition-all active:scale-95 ${
+            className={`min-h-10 rounded-full border px-4 py-2 text-sm font-medium transition-all active:scale-[0.97] ${
               customOn
-                ? "border-purple bg-purple text-white shadow-md shadow-purple/30"
-                : "border-border bg-card-bg text-foreground hover:border-purple hover:-translate-y-0.5"
+                ? "border-purple bg-purple text-white"
+                : "border-border bg-card-bg text-foreground hover:border-purple/50 hover:bg-purple/5"
             } disabled:opacity-40`}
           >
             {CUSTOM_OPTION_EMOJI} {CUSTOM_OPTION_LABEL}
@@ -134,7 +133,7 @@ export default function OptionPicker({ definition, onSubmit, disabled }: OptionP
       {customOn && (
         <input
           type="text"
-          className="w-full rounded-full border-2 border-purple bg-card-bg px-4 py-3 text-base outline-none transition focus:ring-4 focus:ring-purple/15 sm:py-2 sm:text-sm"
+          className="w-full rounded-full border border-purple bg-card-bg px-4 py-2.5 text-base outline-none transition focus:ring-4 focus:ring-purple/15 sm:text-sm"
           placeholder="Ketik jawabanmu sendiri..."
           value={customText}
           onChange={(e) => setCustomText(e.target.value)}
@@ -146,17 +145,17 @@ export default function OptionPicker({ definition, onSubmit, disabled }: OptionP
         <button
           onClick={handleSubmit}
           disabled={disabled}
-          className="min-h-12 flex-1 animate-pulse-glow rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-sm shadow-primary/30 transition active:scale-95 disabled:opacity-40 sm:flex-none"
+          className="min-h-10 flex-1 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-hover active:scale-[0.98] disabled:opacity-40 sm:flex-none"
         >
-          Lanjut 👉
+          Lanjut
         </button>
         {definition.optional && (
           <button
             onClick={handleSkip}
             disabled={disabled}
-            className="min-h-12 rounded-full border-2 border-border px-5 text-sm font-bold text-muted transition active:scale-95"
+            className="min-h-10 rounded-xl border border-border px-5 text-sm font-medium text-muted transition hover:bg-foreground/5 active:scale-[0.98]"
           >
-            Lewati ⏭️
+            Lewati
           </button>
         )}
       </div>

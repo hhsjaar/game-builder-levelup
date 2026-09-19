@@ -21,12 +21,12 @@ export default function LoadingGameAnimation() {
   }, []);
 
   return (
-    <div className="flex animate-pop-in flex-col gap-2 rounded-3xl border-2 border-card-border bg-card-bg px-4 py-3 text-sm font-bold text-muted">
-      <div className="flex items-center gap-3">
-        <span className="animate-spin-slow text-2xl">{STEPS[index].emoji}</span>
+    <div className="ms-[34px] flex flex-col gap-2.5 rounded-2xl border border-card-border bg-card-bg px-4 py-3 text-sm text-muted">
+      <div key={index} className="flex animate-pop-in items-center gap-2.5">
+        <span className="text-lg">{STEPS[index].emoji}</span>
         <span>{STEPS[index].text}</span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+      <div className="h-1 w-full overflow-hidden rounded-full bg-background-alt">
         <div className="shimmer h-full w-full rounded-full" />
       </div>
     </div>
