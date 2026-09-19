@@ -4,18 +4,17 @@
 # additive: it does not touch the existing editor.burjolevelup.com or
 # harusnyalotau.website blocks already in /etc/nginx/sites-enabled/.
 #
-# Copy to /etc/nginx/sites-available/game-prompt-studio, fill in your
-# subdomain, then:
+# Copy to /etc/nginx/sites-available/game-prompt-studio, then:
 #   sudo ln -s /etc/nginx/sites-available/game-prompt-studio /etc/nginx/sites-enabled/
 #   sudo nginx -t && sudo systemctl reload nginx
-#   sudo certbot --nginx -d your-subdomain.example.com   # adds HTTPS + redirect on top of this
+#   sudo certbot --nginx -d game.burjolevelup.com   # adds HTTPS + redirect on top of this
 #
 # The long proxy_*_timeout values are the whole point of moving off Vercel:
 # game generation can legitimately take several minutes, and Nginx's default
 # 60s read timeout would kill it long before Claude finishes.
 server {
     listen 80;
-    server_name your-subdomain.example.com;
+    server_name game.burjolevelup.com;
 
     location / {
         proxy_pass http://127.0.0.1:3001;
