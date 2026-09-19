@@ -9,14 +9,15 @@ export const runtime = "nodejs";
 // Game generation (Claude call with a large single-file HTML output) routinely
 // takes well over 60s, and richer/interactive concepts (voice narration,
 // collection systems, custom drag interactions) have been observed taking
-// 2+ minutes at "high" effort — and, in production, a real request has hit
-// the previous 280s ceiling exactly (Vercel Runtime Timeout Error, POST
-// .../messages, 2026-09-19). Vercel Hobby's hard ceiling with Fluid Compute
-// (the current default) is 300s — 295s uses nearly all of that budget while
-// still leaving a few seconds for the response itself to be written back.
-// If timeouts persist even at this ceiling, the fix is architectural (return
-// immediately and generate in the background, polling for completion) —
-// this plan cannot buy more wall-clock time than the platform allows.
+// 2+ minutes at "high" effort — and, in production on Vercel, a real request
+// once hit the then-280s ceiling exactly (Vercel Runtime Timeout Error, POST
+// .../messages, 2026-09-19).
+//
+// `maxDuration` only means something on Vercel (it's a no-op on a plain Node
+// server) — kept here in case this ever runs on Vercel again, but the actual
+// deployment target is now a VPS (see ecosystem.config.js +
+// deploy/nginx.conf.example), which has no serverless-style hard timeout at
+// all. There, Nginx's proxy_read_timeout is the only ceiling that matters.
 export const maxDuration = 295;
 
 export async function POST(
