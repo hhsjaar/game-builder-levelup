@@ -55,12 +55,30 @@ export default function ChatPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ clientId, value }),
       });
-      const data = await res.json();
+
+      // A platform-level failure (e.g. Vercel's own 504 timeout page) returns
+      // plain text/HTML, not our API's JSON — res.json() would throw and
+      // surface a raw "Unexpected token..." parse error instead of a message
+      // a user can act on. Read as text first and parse defensively.
+      const raw = await res.text();
+      let data: { error?: string; messages?: MessageRecord[]; conversation?: ConversationRecord; game?: GameInfo } = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        if (!res.ok) {
+          throw new Error(
+            res.status === 504
+              ? "Pembuatan game ini memakan waktu terlalu lama dan terhenti di server. Coba kurangi jumlah fitur/jenis game yang dipilih, atau coba lagi."
+              : "Server tidak merespons dengan benar. Coba lagi sebentar lagi."
+          );
+        }
+      }
+
       if (!res.ok) {
         throw new Error(data.error || "Terjadi kesalahan.");
       }
-      onMessagesChange([...messages, ...data.messages]);
-      onConversationChange(data.conversation);
+      onMessagesChange([...messages, ...(data.messages ?? [])]);
+      if (data.conversation) onConversationChange(data.conversation);
       if (data.game) {
         onGameReady(data.game);
       }
