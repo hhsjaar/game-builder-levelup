@@ -44,6 +44,7 @@ export type StepId =
   | "idea"
   | "gameTypes"
   | "interactiveConcept"
+  | "learningGoal"
   | "themes"
   | "ages"
   | "difficulty"

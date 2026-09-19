@@ -25,6 +25,9 @@ const IDEA_INTERACTIVE_PREFIX = "interactive:";
 const IDEA_EXPLORE_BASIC = "explore:basic";
 const IDEA_EXPLORE_INTERACTIVE = "explore:interactive";
 
+const LEARNING_GOAL_WITH_MATERIAL = "with_material";
+const LEARNING_GOAL_PURE_FUN = "pure_fun";
+
 /** True for a predefined interactive concept (has hand-written mechanics in
  * game-taxonomy.ts) — false for anything the user typed themselves. Used to
  * decide whether the curriculum theme picker makes sense: a predefined
@@ -52,6 +55,7 @@ const BASIC_ORDER: StepId[] = [
 const INTERACTIVE_ORDER: StepId[] = [
   "idea",
   "interactiveConcept",
+  "learningGoal",
   "themes",
   "ages",
   "difficulty",
@@ -97,6 +101,18 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
         optional: false,
         prompt: "🕹️ Pilih satu konsep game interaktif yang paling cocok:",
         options: INTERACTIVE_CONCEPTS,
+      };
+    case "learningGoal":
+      return {
+        id: "learningGoal",
+        selectMode: "single",
+        allowCustom: false,
+        optional: false,
+        prompt: "📚 Game ini mau fokus mengajarkan materi tertentu, atau murni buat seru-seruan & melatih skill (kayak game arcade/RPG komersil biasa, tanpa pelajaran sekolah)?",
+        options: [
+          { value: LEARNING_GOAL_WITH_MATERIAL, label: "Ada materi yang mau diajarkan", emoji: "📚" },
+          { value: LEARNING_GOAL_PURE_FUN, label: "Murni seru-seruan, tanpa materi", emoji: "🎉" },
+        ],
       };
     case "themes":
       return {
@@ -228,6 +244,10 @@ export function submitAnswer(state: FlowState, value: string[] | string): Submit
     return submitIdeaAnswer(state, value);
   }
 
+  if (step === "learningGoal") {
+    return submitLearningGoalAnswer(state, value);
+  }
+
   const def = getStepDefinition(step);
   const field = fieldForStep(step);
 
@@ -305,7 +325,9 @@ function submitIdeaAnswer(state: FlowState, rawValue: string[] | string): Submit
   } else if (value.startsWith(IDEA_INTERACTIVE_PREFIX)) {
     const concept = value.slice(IDEA_INTERACTIVE_PREFIX.length);
     nextAnswers = { ...nextAnswers, mode: "interactive", interactiveConcept: concept };
-    nextStepId = "themes";
+    // Predefined concept — still need to know whether it's meant to teach
+    // something or is just for fun (see learningGoal step / its rationale).
+    nextStepId = "learningGoal";
   } else {
     // Free-typed idea, e.g. "platformer ala Mario yang mengajarkan
     // perkalian" — this IS the concept, bespoke and self-contained. No
@@ -319,6 +341,30 @@ function submitIdeaAnswer(state: FlowState, rawValue: string[] | string): Submit
     ok: true,
     state: { currentStep: nextStepId, answers: nextAnswers },
     summary: summarizeIdeaAnswer(value, nextAnswers),
+  };
+}
+
+/** A predefined interactive concept (Quest RPG, Kebun Dunia, etc.) is a
+ * generic wrapper — it can either teach a curriculum subject or just be a
+ * fun, skill-based experience with no lesson content at all (an arcade
+ * platformer, a MOBA-style skirmish, ...). This step asks which, instead of
+ * assuming every interactive game must carry a school subject. */
+function submitLearningGoalAnswer(state: FlowState, rawValue: string[] | string): SubmitResult {
+  const value = (Array.isArray(rawValue) ? rawValue[0] : rawValue) ?? "";
+  if (value !== LEARNING_GOAL_WITH_MATERIAL && value !== LEARNING_GOAL_PURE_FUN) {
+    return { ok: false, error: "Pilih salah satu opsi." };
+  }
+
+  const nextStepId: StepId = value === LEARNING_GOAL_WITH_MATERIAL ? "themes" : "ages";
+  const summary =
+    value === LEARNING_GOAL_WITH_MATERIAL
+      ? "📚 Ada materi yang mau diajarkan"
+      : "🎉 Murni seru-seruan, tanpa materi";
+
+  return {
+    ok: true,
+    state: { currentStep: nextStepId, answers: state.answers },
+    summary,
   };
 }
 
