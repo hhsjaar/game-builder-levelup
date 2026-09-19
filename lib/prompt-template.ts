@@ -200,6 +200,7 @@ MODE 2 PEMAIN (WAJIB):
  * so unlike SYSTEM_PROMPT it's never cached and is rebuilt every call. */
 export function buildUserPrompt(spec: GameSpec): string {
   const sessionId = crypto.randomUUID();
+  const hasThemes = spec.themes.length > 0;
   const themeLabels = labelsFor(THEMES, spec.themes);
   const ageLabels = labelsFor(AGE_BRACKETS, spec.ages);
   const difficultyLabel = labelFor(DIFFICULTIES, spec.difficulty);
@@ -207,6 +208,16 @@ export function buildUserPrompt(spec: GameSpec): string {
   const colorLabel = labelFor(COLOR_THEMES, spec.colorTheme);
   const gameTypeLabels =
     spec.mode === "basic" ? labelsFor(GAME_TYPES, spec.gameTypes) : labelFor(INTERACTIVE_CONCEPTS, spec.interactiveConcept ?? "");
+
+  // A bespoke/custom interactive concept (e.g. "platformer ala Mario yang
+  // mengajarkan perkalian") skips the curriculum theme picker in
+  // lib/flow-machine.ts entirely — so `themes` can legitimately be empty
+  // here. Fall back to letting the concept itself carry the subject instead
+  // of printing an empty "Materi/tema:" line.
+  const themeLine = hasThemes
+    ? `- Materi/tema: ${themeLabels}`
+    : `- Materi/tema: tidak ditentukan secara spesifik oleh user — game ini murni berangkat dari konsep di atas (lihat <mechanics>). Selipkan nilai edukatif/kognitif yang relevan dan sesuai usia target semampunya, tapi JANGAN memaksakan materi kurikulum yang tidak nyambung dengan konsepnya.`;
+  const mascotThemeRef = hasThemes ? `materi "${themeLabels}"` : "konsep game ini";
 
   const designNotesLine = spec.designNotes
     ? `- Catatan desain tambahan dari user: ${spec.designNotes}`
@@ -219,14 +230,14 @@ export function buildUserPrompt(spec: GameSpec): string {
 
 <game_spec>
 - Jenis game: ${gameTypeLabels}
-- Materi/tema: ${themeLabels}
+${themeLine}
 - Target usia: ${ageLabels}
 - Tingkat kesulitan: ${difficultyLabel}
 - Fitur tambahan (WAJIB diterapkan nyata dalam gameplay): ${featureLabels}
 - Brand/nama game: "${spec.gameName}"
 - Arah warna tema (titik berangkat palet, bukan resep literal — lihat <design_philosophy>): ${colorLabel}
 ${designNotesLine}
-- MASKOT UTAMA: rancang ilustrasi karakter yang relevan dengan materi "${themeLabels}" dan brand "${spec.gameName}", tampil di halaman welcoming.
+- MASKOT UTAMA: rancang ilustrasi karakter yang relevan dengan ${mascotThemeRef} dan brand "${spec.gameName}", tampil di halaman welcoming.
 </game_spec>
 
 <tone_guidance>

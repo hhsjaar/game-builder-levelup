@@ -41,7 +41,7 @@ export interface GeneratedGameRecord {
 
 /** One step in the wizard. `field` is where the answer is stored in GameSpec. */
 export type StepId =
-  | "mode"
+  | "idea"
   | "gameTypes"
   | "interactiveConcept"
   | "themes"
@@ -62,6 +62,10 @@ export interface StepOption {
   /** Decorative emoji shown next to the label in the UI — kept separate from
    * `label` so prompt text sent to Claude stays plain. */
   emoji?: string;
+  /** Clusters this option under a labeled group in OptionPicker (e.g. "basic"
+   * / "interactive" / "explore" on the idea step). Options without a group
+   * render as one flat row, same as before this field existed. */
+  group?: string;
 }
 
 export interface StepDefinition {
@@ -73,6 +77,13 @@ export interface StepDefinition {
   optional: boolean;
   /** Free-text input instead of option picker (e.g. Nama Game). */
   freeText?: boolean;
+  /** Renders quick-pick option chips (grouped, each submits immediately)
+   * AND an always-visible free-text field on the same screen — used by the
+   * opening "idea" step so users can either tap an example or just type
+   * their own idea straight away. Mutually exclusive with `freeText`. */
+  freeTextWithOptions?: boolean;
+  /** Placeholder for the free-text field when `freeTextWithOptions` is set. */
+  freeTextPlaceholder?: string;
 }
 
 /** Answers collected so far, keyed by field name. Values are string arrays for

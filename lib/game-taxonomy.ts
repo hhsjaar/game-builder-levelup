@@ -1,5 +1,22 @@
 import type { StepOption } from "./types";
 
+/** Shown on the opening "idea" step: a handful of concrete examples from
+ * each mode (so "Game Basic" / "Game Interaktif" mean something concrete on
+ * first sight, not just a bare label) plus an explicit escape hatch to the
+ * full picker for users who'd rather browse than free-type. Values are
+ * namespaced ("basic:", "interactive:", "explore:") so lib/flow-machine.ts
+ * can route each pick without a separate lookup table. */
+export const IDEA_SUGGESTIONS: StepOption[] = [
+  { value: "basic:kuis", label: "Kuis Perkalian Seru", emoji: "🧠", group: "basic" },
+  { value: "basic:mencocokan", label: "Mencocokan Hewan & Habitat", emoji: "🔗", group: "basic" },
+  { value: "basic:susun_huruf", label: "Susun Huruf Alfabet", emoji: "🔤", group: "basic" },
+  { value: "interactive:quest_rpg", label: "Petualangan Quest RPG", emoji: "🗺️", group: "interactive" },
+  { value: "interactive:pabrik_karakter", label: "Pabrik Karakter Ajaib", emoji: "🏭", group: "interactive" },
+  { value: "interactive:lab_seret_lepas", label: "Laboratorium Seret & Lepas", emoji: "🧪", group: "interactive" },
+  { value: "explore:basic", label: "Lihat semua jenis Game Basic", emoji: "🧩", group: "explore" },
+  { value: "explore:interactive", label: "Lihat semua konsep Game Interaktif", emoji: "🎮", group: "explore" },
+];
+
 export const GAME_TYPES: StepOption[] = [
   { value: "kuis", label: "Kuis Pilihan Ganda", emoji: "🧠" },
   { value: "mencocokan", label: "Mencocokan", emoji: "🔗" },

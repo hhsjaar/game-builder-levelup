@@ -5,7 +5,9 @@ import {
   DIFFICULTIES,
   FEATURES,
   COLOR_THEMES,
+  IDEA_SUGGESTIONS,
   INTERACTIVE_CONCEPTS,
+  INTERACTIVE_CONCEPT_MECHANICS,
   labelFor,
   labelsFor,
 } from "./game-taxonomy";
@@ -16,16 +18,25 @@ import type {
   GameSpec,
   StepDefinition,
   StepId,
-  StepOption,
 } from "./types";
 
-const MODE_OPTIONS: StepOption[] = [
-  { value: "basic", label: "Game Basic", emoji: "🧩" },
-  { value: "interactive", label: "Game Interaktif", emoji: "🕹️" },
-];
+const IDEA_BASIC_PREFIX = "basic:";
+const IDEA_INTERACTIVE_PREFIX = "interactive:";
+const IDEA_EXPLORE_BASIC = "explore:basic";
+const IDEA_EXPLORE_INTERACTIVE = "explore:interactive";
+
+/** True for a predefined interactive concept (has hand-written mechanics in
+ * game-taxonomy.ts) — false for anything the user typed themselves. Used to
+ * decide whether the curriculum theme picker makes sense: a predefined
+ * concept is a generic wrapper that needs a subject plugged in, but a
+ * custom idea ("platformer ala Mario...") already carries its own premise
+ * and forcing an unrelated SD/TK theme list onto it doesn't fit. */
+function isKnownInteractiveConcept(value: string): boolean {
+  return value in INTERACTIVE_CONCEPT_MECHANICS;
+}
 
 const BASIC_ORDER: StepId[] = [
-  "mode",
+  "idea",
   "gameTypes",
   "themes",
   "ages",
@@ -39,7 +50,7 @@ const BASIC_ORDER: StepId[] = [
 ];
 
 const INTERACTIVE_ORDER: StepId[] = [
-  "mode",
+  "idea",
   "interactiveConcept",
   "themes",
   "ages",
@@ -58,14 +69,16 @@ export function getStepOrder(mode?: GameMode): StepId[] {
 
 export function getStepDefinition(stepId: StepId): StepDefinition {
   switch (stepId) {
-    case "mode":
+    case "idea":
       return {
-        id: "mode",
+        id: "idea",
         selectMode: "single",
         allowCustom: false,
         optional: false,
-        prompt: "👋 Halo! Yuk buat game edukasi seru. Mau bikin apa hari ini?",
-        options: MODE_OPTIONS,
+        freeTextWithOptions: true,
+        freeTextPlaceholder: 'Ceritakan ide bebasmu... (mis. "platformer ala Mario yang mengajarkan perkalian")',
+        prompt: "👋 Halo! Mau bikin game edukasi apa hari ini? Ketik ide bebasmu, atau pilih salah satu contoh di bawah.",
+        options: IDEA_SUGGESTIONS,
       };
     case "gameTypes":
       return {
@@ -174,8 +187,6 @@ export function getStepDefinition(stepId: StepId): StepDefinition {
 
 function fieldForStep(stepId: StepId): keyof FlowAnswers | null {
   switch (stepId) {
-    case "mode":
-      return "mode";
     case "gameTypes":
       return "gameTypes";
     case "interactiveConcept":
@@ -213,6 +224,10 @@ export function submitAnswer(state: FlowState, value: string[] | string): Submit
     return { ok: false, error: "Alur sudah selesai." };
   }
 
+  if (step === "idea") {
+    return submitIdeaAnswer(state, value);
+  }
+
   const def = getStepDefinition(step);
   const field = fieldForStep(step);
 
@@ -244,10 +259,18 @@ export function submitAnswer(state: FlowState, value: string[] | string): Submit
     (nextAnswers as Record<string, unknown>)[field] = normalized;
   }
 
-  const mode = nextAnswers.mode;
-  const order = getStepOrder(mode);
-  const idx = order.indexOf(step);
-  const nextStepId = order[idx + 1] ?? "done";
+  let nextStepId: StepId;
+  if (step === "interactiveConcept" && typeof normalized === "string" && !isKnownInteractiveConcept(normalized)) {
+    // Custom/free-typed concept: what it teaches is either already implied
+    // by the concept itself or left to Claude's judgment — skip the
+    // curriculum theme picker built for the predefined concepts.
+    nextStepId = "ages";
+  } else {
+    const mode = nextAnswers.mode;
+    const order = getStepOrder(mode);
+    const idx = order.indexOf(step);
+    nextStepId = order[idx + 1] ?? "done";
+  }
 
   return {
     ok: true,
@@ -256,10 +279,63 @@ export function submitAnswer(state: FlowState, value: string[] | string): Submit
   };
 }
 
+/** The opening step is a single quick-pick/free-text answer that can set
+ * `mode` plus `gameTypes` or `interactiveConcept` in one go, and skips
+ * straight past whichever downstream steps it already answered — see the
+ * four branches below. */
+function submitIdeaAnswer(state: FlowState, rawValue: string[] | string): SubmitResult {
+  const value = (Array.isArray(rawValue) ? rawValue.join(" ") : rawValue).trim();
+  if (!value) {
+    return { ok: false, error: "Ceritakan idemu, atau pilih salah satu contoh di atas." };
+  }
+
+  let nextAnswers: FlowAnswers = { ...state.answers };
+  let nextStepId: StepId;
+
+  if (value === IDEA_EXPLORE_BASIC) {
+    nextAnswers = { ...nextAnswers, mode: "basic" };
+    nextStepId = "gameTypes";
+  } else if (value === IDEA_EXPLORE_INTERACTIVE) {
+    nextAnswers = { ...nextAnswers, mode: "interactive" };
+    nextStepId = "interactiveConcept";
+  } else if (value.startsWith(IDEA_BASIC_PREFIX)) {
+    const gameType = value.slice(IDEA_BASIC_PREFIX.length);
+    nextAnswers = { ...nextAnswers, mode: "basic", gameTypes: [gameType] };
+    nextStepId = "themes";
+  } else if (value.startsWith(IDEA_INTERACTIVE_PREFIX)) {
+    const concept = value.slice(IDEA_INTERACTIVE_PREFIX.length);
+    nextAnswers = { ...nextAnswers, mode: "interactive", interactiveConcept: concept };
+    nextStepId = "themes";
+  } else {
+    // Free-typed idea, e.g. "platformer ala Mario yang mengajarkan
+    // perkalian" — this IS the concept, bespoke and self-contained. No
+    // forced curriculum-theme step: whatever it should teach is either
+    // already in that sentence or left to the concept itself.
+    nextAnswers = { ...nextAnswers, mode: "interactive", interactiveConcept: value };
+    nextStepId = "ages";
+  }
+
+  return {
+    ok: true,
+    state: { currentStep: nextStepId, answers: nextAnswers },
+    summary: summarizeIdeaAnswer(value, nextAnswers),
+  };
+}
+
+function summarizeIdeaAnswer(value: string, answers: FlowAnswers): string {
+  if (value === IDEA_EXPLORE_BASIC) return "🧩 Game Basic — pilih jenis sendiri";
+  if (value === IDEA_EXPLORE_INTERACTIVE) return "🎮 Game Interaktif — pilih konsep sendiri";
+  if (value.startsWith(IDEA_BASIC_PREFIX)) {
+    return `🧩 Ide: ${labelFor(GAME_TYPES, answers.gameTypes?.[0] ?? "")}`;
+  }
+  if (value.startsWith(IDEA_INTERACTIVE_PREFIX)) {
+    return `🎮 Ide: ${labelFor(INTERACTIVE_CONCEPTS, answers.interactiveConcept ?? "")}`;
+  }
+  return `💡 Ide: ${value}`;
+}
+
 function summarizeAnswer(stepId: StepId, answers: FlowAnswers): string {
   switch (stepId) {
-    case "mode":
-      return answers.mode === "interactive" ? "🕹️ Game Interaktif" : "🧩 Game Basic";
     case "gameTypes":
       return `🎮 Jenis Game: ${labelsFor(GAME_TYPES, answers.gameTypes ?? [])}`;
     case "interactiveConcept":
@@ -310,6 +386,6 @@ export function toGameSpec(answers: FlowAnswers): GameSpec {
 }
 
 export const INITIAL_FLOW_STATE: FlowState = {
-  currentStep: "mode",
+  currentStep: "idea",
   answers: {},
 };
